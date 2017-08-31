@@ -1,0 +1,23 @@
+[
+	{
+		"subjectId" : "kasdfadsf",
+		"subjectIdentifier" : "marissa@example.com",
+		"attributes" : [
+		    { "issuer" : "https://acs.attributes.int",
+		      "name" : "role",
+		      "value": "operator" 
+		    }
+		]
+	}
+	,
+	{
+		"subjectId" : "bklasdfdasf",
+		"subjectIdentifier" : "bob@example.com",
+		"attributes" : [
+		    { "issuer" : "https://acs.attributes.int",
+		      "name" : "role",
+		      "value": "admin" 
+		    }
+		]
+	}
+]

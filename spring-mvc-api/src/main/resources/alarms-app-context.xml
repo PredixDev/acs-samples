@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+    xmlns:sec="http://www.springframework.org/schema/security"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/security/oauth2 http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <context:annotation-config />
+
+    <sec:authentication-manager />
+
+    <bean
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        xmlns="http://www.springframework.org/schema/beans">
+        <property name="locations">
+            <list>
+                <value>classpath:/application.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true" />
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+    </bean>
+
+    <http pattern="/**" request-matcher="ant"
+        xmlns="http://www.springframework.org/schema/security"
+        disable-url-rewriting="true" use-expressions="true"
+        entry-point-ref="preAuthenticationEntryPoint">
+        <expression-handler ref="acsExpressionHandler" />
+
+        <intercept-url pattern="/about" access="isFullyAuthenticated()" />
+
+        <!-- Authorize using ACS -->
+        <intercept-url pattern="/alarm/**" access="isAcsAuthorized()" />
+
+        <anonymous enabled="false" />
+        <custom-filter ref="oauth2ServiceFilter" position="PRE_AUTH_FILTER" />
+    </http>
+
+    <!-- ************************************* -->
+    <!-- OAuth2 Related Configuration : Begin -->
+    <oauth:resource-server id="oauth2ServiceFilter"
+        token-services-ref="tokenServices" />
+
+    <bean id="tokenServices"
+        class="com.ge.predix.uaa.token.lib.FastTokenServices">
+        <property name="trustedIssuers">
+            <list>
+                <value>#{sampleAppCloudConfig.uaaIssuerId}</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="preAuthenticationEntryPoint"
+        class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint" />
+
+    <oauth:client id="oauth2ClientFilter" />
+    <!-- OAuth2 Related Configuration : End -->
+    <!-- *********************************** -->
+
+
+    <!-- ***************************************** -->
+    <!-- Predix ACS Related Configuration : Begin -->
+
+    <!-- Instantiates the ACSPolicyManager bean to provision sample policy 
+        and attributes to the ACS service -->
+    <bean class="com.ge.predix.acs.sample.alarms.ACSPolicyManager"
+        init-method="configureACS" destroy-method="cleanupACSConfiguration" />
+
+    <!-- This RestTemplate is used by ACSPolicyManager to provision policies and attributes in ACS. -->
+    <bean id="acsPolicyAdmin"
+        class="org.springframework.security.oauth2.client.OAuth2RestTemplate">
+        <constructor-arg>
+            <bean
+                class="org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails">
+                <property name="accessTokenUri" value="#{sampleAppCloudConfig.uaaIssuerId}" />
+                <property name="clientId" value="${clientId}" />
+                <property name="clientSecret" value="${clientSecret}" />
+                <property name="username" value="${policyAdminUserName}" />
+                <property name="password" value="${policyAdminUserPassword}" />
+            </bean>
+        </constructor-arg>
+        <property name="requestFactory" ref="httpRequestFactory"/>
+    </bean>
+
+    <bean id="httpRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+        <constructor-arg ref="httpClient" />
+    </bean>
+    <bean id="httpClient" factory-bean="systemHttpClientBuilder" factory-method="build"/>
+    <bean id="systemHttpClientBuilder" factory-bean="httpClientBuilder" factory-method="useSystemProperties"/>
+    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create"/>
+
+    <!-- This include is needed to use acs-spring-security-extensions. The imported file is located in 
+    acs-spring-security-extensions artifact. -->
+    <import resource="classpath:acs-spring-config.xml" />
+
+    <!-- ***************************************** -->
+    <!-- Predix ACS Related Configuration : End -->
+
+</beans>

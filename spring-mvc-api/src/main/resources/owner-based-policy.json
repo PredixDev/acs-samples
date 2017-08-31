@@ -1,0 +1,27 @@
+{
+    "name" : "sample-app-policy-set",
+    "policies" : [
+            {
+            "name" : "allow-all-HTTP-requests-for-admin",
+            "target" : {
+                "resource" : {
+                    "uriTemplate" : "/alarm/{alarm_id}",
+                    "attributes" : [
+                        { "issuer" : "https://acs.attributes.int",
+                          "name" : "owner" }
+                    ]
+                }
+            },
+            "conditions" : [
+                { "name" : "",
+                  "condition" : "match.any(resource.attributes('https://acs.attributes.int','owner'), subject.attributes('https://acs.attributes.int','subject-id'))" }
+            ],
+            "effect" : "PERMIT"
+        }
+    ,
+        {
+            "name" : "catch-all-DENY-policy",
+            "effect" : "DENY"
+        }
+    ]
+}

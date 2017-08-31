@@ -1,0 +1,52 @@
+{
+    "name" : "sample-app-policy-set",
+    "policies" : [
+            {
+            "name" : "allow-all-HTTP-requests-for-admin",
+            "target" : {
+                "resource" : {
+                    "uriTemplate" : "/alarm/{alarm_id}"
+                },
+                "subject" : {
+                    "name" : "has-role",
+                    "attributes" : [
+                        { "issuer" : "https://acs.attributes.int",
+                          "name" : "role" }
+                    ]
+                }
+            },
+            "conditions" : [
+                { "name" : "",
+                  "condition" : "match.single(subject.attributes('https://acs.attributes.int', 'role'), 'admin')" }
+            ],
+            "effect" : "PERMIT"
+        }
+    ,
+        {
+            "name" : "allow-only-HTTP GET-for-operator",
+            "target" : {
+                "resource" : {
+                    "uriTemplate" : "/alarm/{alarm_id}"
+                },
+                "action":"GET",
+                "subject" : {
+                    "name" : "has-role",
+                    "attributes" : [
+                        { "issuer" : "https://acs.attributes.int",
+                          "name" : "role" }
+                    ]
+                }
+            },
+            "conditions" : [
+                { "name" : "",
+                  "condition" : "match.single(subject.attributes('https://acs.attributes.int', 'role'), 'operator')" }
+            ],
+            "effect" : "PERMIT"
+        }
+    ,
+        {
+            "name" : "catch-all-DENY-policy",
+            "effect" : "DENY"
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "name": "Access Control Service (ACS) Samples",
+    "version": "3.1.0",
+    "private": true,
+    "dependencies": {
+        "local-setup": "https://github.com/PredixDev/local-setup#1.0.12",
+        "predix-scripts": "https://github.com/PredixDev/predix-scripts#1.1.35",
+        "acs-samples": "https://github.com/PredixDev/acs-samples#master"
+    },
+    "author": "anubhavi25"
+}

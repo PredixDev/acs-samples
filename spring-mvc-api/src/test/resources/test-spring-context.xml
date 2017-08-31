@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <bean
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        xmlns="http://www.springframework.org/schema/beans">
+        <property name="locations">
+            <list>
+                <value>classpath:alarms-test.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="nonAdminTemplate"
+        class="org.springframework.security.oauth2.client.OAuth2RestTemplate">
+        <constructor-arg>
+            <bean
+                class="org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails">
+                <property name="accessTokenUri" value="${uaaIssuerId}" />
+                <property name="clientId" value="${clientId}" />
+                <property name="clientSecret" value="${clientSecret}" />
+                <property name="username" value="${nonAdminUserName}" />
+                <property name="password" value="${nonAdminUserPassword}" />
+            </bean>
+        </constructor-arg>
+        <property name="requestFactory" ref="httpRequestFactory"/>
+    </bean>
+
+    <bean id="adminTemplate"
+        class="org.springframework.security.oauth2.client.OAuth2RestTemplate">
+        <constructor-arg>
+            <bean
+                class="org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails">
+                <property name="accessTokenUri" value="${uaaIssuerId}" />
+                <property name="clientId" value="${clientId}" />
+                <property name="clientSecret" value="${clientSecret}" />
+                <property name="username" value="${adminUserName}" />
+                <property name="password" value="${adminUserPassword}" />
+            </bean>
+        </constructor-arg>
+        <property name="requestFactory" ref="httpRequestFactory"/>
+    </bean>
+
+    <bean id="httpRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+        <constructor-arg ref="httpClient" />
+    </bean>
+    <bean id="httpClient" factory-bean="systemHttpClientBuilder" factory-method="build"/>
+    <bean id="systemHttpClientBuilder" factory-bean="httpClientBuilder" factory-method="useSystemProperties"/>
+    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create"/>
+
+</beans>

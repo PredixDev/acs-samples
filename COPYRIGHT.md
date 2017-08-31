@@ -1,0 +1,1 @@
+The dependencies in this project are resolved by `pom.xml` files.  Copyrights for those dependencies are included [here](http://predixdev.github.io/predix-rmd-ref-app/copyright.html). This list may be a superset of dependencies actually referenced by this project.
