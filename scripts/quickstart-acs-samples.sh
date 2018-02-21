@@ -158,10 +158,7 @@ fi
 getPredixScripts
 getCurrentRepo
 
-echo "Completed cloneing repo"
-pwd 
-ls -ltr
-PREDIX_SCRIPTS_LOCATION="$($PWD/${PREDIX_SCRIPTS})"
+PREDIX_SCRIPTS_LOCATION="$( python -c "import os; print os.path.abspath('${PREDIX_SCRIPTS}')" )"
 echo " Predix script location $PREDIX_SCRIPTS_LOCATION"
 cd "${PREDIX_SCRIPTS}/${REPO_NAME}"
 DIR=$( cd "$( dirname "$( find "$PWD" -maxdepth 2 -name "${SCRIPT_NAME}" )" )/.." && pwd )
