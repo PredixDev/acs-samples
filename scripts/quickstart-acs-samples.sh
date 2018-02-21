@@ -158,6 +158,9 @@ fi
 getPredixScripts
 getCurrentRepo
 
+echo "Completed cloneing repo"
+pwd 
+ls -ltr
 PREDIX_SCRIPTS_LOCATION="$($PWD/${PREDIX_SCRIPTS})"
 echo " Predix script location $PREDIX_SCRIPTS_LOCATION"
 cd "${PREDIX_SCRIPTS}/${REPO_NAME}"
