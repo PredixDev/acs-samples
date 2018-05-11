@@ -62,7 +62,8 @@ GOTO :EOF
 :MANUAL
     ECHO.
     ECHO.
-    ECHO Exiting tutorial. 
+    ECHO Exiting tutorial. You can manually go through the tutorial steps here.
+    ECHO !TUTORIAL!
 GOTO :EOF
 
 :CHECK_PERMISSIONS

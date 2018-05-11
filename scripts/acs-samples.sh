@@ -36,7 +36,7 @@ function execute_maven_script() {
 
 function main() {
     pushd "${ROOT_DIR}/acs-samples/spring-mvc-api" > /dev/null 2>&1
-    ./provision.sh -n
+    ./provision.sh -nj
     execute_maven_script './push-sample-app.sh -n'
     execute_maven_script './run-integration-tests.sh -n'
     popd > /dev/null 2>&1
