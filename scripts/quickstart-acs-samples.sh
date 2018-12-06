@@ -73,9 +73,11 @@ function check_internet() {
 
 function init() {
     check_internet 'https://www.google.com'
-    eval "$(curl -s -L 'https://raw.githubusercontent.com/PredixDev/izon/master/izon.sh')"
+    eval "$(curl -s -L $IZON_SH)"
+    getUsingCurl $SCRIPT_LOC
+    chmod 755 $SCRIPT_NAME;
     getVersionFile
-    getLocalSetupFuncs
+    getLocalSetupFuncs $GITHUB_RAW
 }
 
 function print_out_standard_usage() {
@@ -120,6 +122,8 @@ if [[ -n "$HTTPS_PROXY" && -z "$https_proxy" ]]; then
     export https_proxy="$HTTPS_PROXY"
 fi
 
+IZON_SH="https://raw.githubusercontent.com/PredixDev/izon/1.3.0/izon2.sh"
+GITHUB_RAW="https://raw.githubusercontent.com/PredixDev"
 REPO_NAME='acs-samples'
 PRINT_USAGE=0
 SKIP_SETUP='false'
@@ -128,15 +132,22 @@ QUICKSTART_ARGS="$SCRIPT"
 VERSION_JSON='version.json'
 REPO_BRANCH='master'
 GITHUB_URL_PREFIX='https://raw.githubusercontent.com/PredixDev'
-VERSION_JSON_URL="${GITHUB_URL_PREFIX}/${REPO_NAME}/${REPO_BRANCH}/${VERSION_JSON}"
 PREDIX_SCRIPTS='predix-scripts'
 APP_NAME='Access Control Service (ACS) Samples'
+SCRIPT_NAME="quickstart-acs-samples.sh"
 TOOLS='Cloud Foundry CLI, Git, Predix CLI'
 TOOLS_SWITCHES='--cf --git --predixcli'
 SCRIPT_NAME='quickstart-acs-samples.sh'
 INSTANCE_PREPENDER='acs-sample'
 
-local_read_args "$@"
+# Process switches
+local_read_args $@
+
+#variables after processing switches
+SCRIPT_LOC="$GITHUB_RAW/$REPO_NAME/$REPO_BRANCH/scripts/$SCRIPT_NAME"
+VERSION_JSON_URL="$GITHUB_REPO/$REPO_NAME/$REPO_BRANCH/version.json"
+
+
 init
 
 if [[ "$PRINT_USAGE" == 1 ]]; then

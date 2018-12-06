@@ -270,4 +270,4 @@ The `deprovision.sh` script accomplishes the following tasks in your CF org/spac
 * Deletes the UAA service instance
 * Deletes the ACS sample application itself
 
-[![Analytics](https://ga-beacon.appspot.com/UA-82773213-1/acs-samples/readme?pixel)](https://github.com/PredixDev)
+[![Analytics](https://predix-beacon.appspot.com/UA-82773213-1/acs-samples/readme?pixel)](https://github.com/PredixDev)

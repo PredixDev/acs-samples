@@ -24,4 +24,5 @@ General documentation about ACS is available [here](https://www.predix.io/docs/#
 
 If you have any questions about ACS or the sample application, please ask a question on the Predix.io [forum](http://forum.predix.io/topics/access-control.html).
 
- [![Analytics](https://ga-beacon.appspot.com/UA-82773213-1/acs-samples/readme?pixel)](https://github.com/PredixDev)
+ [![Analytics](https://predix-beacon.appspot.com/UA-82773213-1/acs-samples/readme?pixel)](https://github.com/PredixDev)
+

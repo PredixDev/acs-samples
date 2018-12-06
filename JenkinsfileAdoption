@@ -21,6 +21,9 @@ pipeline {
       label 'dind'
     }
   }
+  options {
+    buildDiscarder(logRotator(artifactNumToKeepStr: '5', numToKeepStr: '20'))
+  }
   environment {
     COMPLIANCEENABLED = true
     CF_AWS_CREDS = credentials('cf_aws_creds')
